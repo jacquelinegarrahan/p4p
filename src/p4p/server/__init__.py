@@ -4,13 +4,12 @@ import warnings
 import re
 import time
 import uuid
+from weakref import ref
 
 from weakref import WeakSet
 
+from .. import _p4p
 from .._p4p import (Server as _Server,
-                    installProvider,
-                    removeProvider,
-                    clearProviders,
                     StaticProvider as _StaticProvider,
                     DynamicProvider as _DynamicProvider,
                     ServerOperation,
@@ -29,6 +28,13 @@ __all__ = (
         'DynamicProvider',
         'ServerOperation',
 )
+
+def installProvider(name, provider):
+    _p4p._providers[name] = ref(provider)
+def removeProvider(name):
+    _p4p._providers.pop(name, None)
+def clearProviders():
+    _p4p._providers.clear()
 
 class Server(object):
 
@@ -101,10 +107,22 @@ class Server(object):
                 'EPICS_PVA_SERVER_PORT': '0',
                 'EPICS_PVA_BROADCAST_PORT': '0',
             }
+
+
         _log.debug("Starting Server isolated=%s, %s", isolate, kws)
         self._S = _Server(providers=Ps, **kws)
 
-        _all_servers.add(self._S)
+        self.tostr = self._S.tostr
+
+        self._S.start()
+        try:
+            if _log.isEnabledFor(logging.DEBUG):
+                _log.debug("New Server: %s", self.tostr(5))
+
+            _all_servers.add(self._S)
+        except:
+            self._S.stop()
+            raise
 
     def __enter__(self):
         return self
@@ -151,7 +169,6 @@ class Server(object):
                 pass
             finally:
                 _log.info("Stopping server")
-
 
 class StaticProvider(_StaticProvider):
 
