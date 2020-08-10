@@ -33,7 +33,7 @@ fi
 
 if [ "$BRPVXS" ]
 then
-    git clone --quiet --depth 5 --branch "$BRPVD" https://github.com/mdavidsaver/pvxs.git pvxs
+    git clone --quiet --recursive --depth 5 --branch "$BRPVXS" https://github.com/mdavidsaver/pvxs.git pvxs
     (cd pvxs && git log -n1 )
     cat << EOF >> $CURDIR/configure/RELEASE.local
 PVXS=$HOME/.source/pvxs
@@ -77,3 +77,9 @@ esac
 make -j2 -C epics-base "$@"
 [ "$BRPVD" ] && make -j2 -C pvDataCPP "$@"
 [ "$BRPVA" ] && make -j2 -C pvAccessCPP "$@"
+
+if [ "$BRPVXS" ]
+then
+    make -j2 -C pvxs/bundle libevent "$@"
+    make -j2 -C pvxs "$@"
+fi
