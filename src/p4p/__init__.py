@@ -57,7 +57,7 @@ def set_debug(lvl):
     """
     lvl = _lvlmap.get(lvl, lvl)
     assert lvl in _lvls, lvl
-    logger_level_set("p4p.*", lvl)
+    _logger_level_set("p4p.*", lvl)
 
 version = (1, 0, -80)
 
