@@ -160,11 +160,9 @@ class Context(object):
 
         self._ctxt = None
 
-        # initialize channel cache
-        self.disconnect()
-
         self._ctxt = _p4p.ClientProvider(provider, conf=conf, useenv=useenv)
         self.conf = self._ctxt.conf
+        self.hurryUp = self._ctxt.hurryUp
 
         _all_contexts.add(self)
 

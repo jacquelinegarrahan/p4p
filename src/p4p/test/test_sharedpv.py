@@ -139,6 +139,7 @@ class TestGPM(RefTestCase):
             self.assertIsInstance(V, Disconnected)
 
             self.pv.open(3.0)
+            ctxt.hurryUp()
 
             V = Q.get(timeout=self.timeout)
             self.assertEqual(V, 3.0)
