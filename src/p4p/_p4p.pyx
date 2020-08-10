@@ -24,20 +24,6 @@ from pvxs cimport server
 from pvxs cimport source
 from pvxs cimport sharedpv
 
-cdef extern from *:
-    """
-// handle -fvisibility=default
-// effects generated _p4p.cpp
-#if __GNUC__ >= 4
-#  undef PyMODINIT_FUNC
-#  if PY_MAJOR_VERSION < 3
-#    define PyMODINIT_FUNC extern "C" __attribute__ ((visibility("default"))) void
-#  else
-#    define PyMODINIT_FUNC extern "C" __attribute__ ((visibility("default"))) PyObject*
-#  endif
-#endif
-    """
-
 numpy.import_array()
 log.logger_config_env()
 

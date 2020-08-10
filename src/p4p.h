@@ -29,6 +29,17 @@
 #endif
 #endif
 
+// handle -fvisibility=default
+// effects generated _p4p.cpp
+#if __GNUC__ >= 4
+#  undef PyMODINIT_FUNC
+#  if PY_MAJOR_VERSION < 3
+#    define PyMODINIT_FUNC extern "C" __attribute__ ((visibility("default"))) void
+#  else
+#    define PyMODINIT_FUNC extern "C" __attribute__ ((visibility("default"))) PyObject*
+#  endif
+#endif
+
 namespace p4p {
 
 using namespace pvxs;
