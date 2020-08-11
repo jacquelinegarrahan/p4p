@@ -151,7 +151,7 @@ class Context(raw.Context):
         def cb(value):
             if F.cancelled() or F.done():
                 return  # ignore
-            elif isinstance(value, (RemoteError, Disconnected, Cancelled)):
+            elif isinstance(value, Exception):
                 F.set_exception(value)
             else:
                 F.set_result(value)
@@ -220,7 +220,7 @@ class Context(raw.Context):
             _log.debug("put done %s %s", name, LazyRepr(value))
             if F.cancelled() or F.done():
                 return  # ignore
-            elif isinstance(value, (RemoteError, Disconnected, Cancelled)):
+            elif isinstance(value, Exception):
                 F.set_exception(value)
             else:
                 F.set_result(value)
@@ -261,7 +261,7 @@ class Context(raw.Context):
         def cb(value):
             if F.cancelled() or F.done():
                 return  # ignore
-            elif isinstance(value, (RemoteError, Disconnected, Cancelled)):
+            elif isinstance(value, Exception):
                 F.set_exception(value)
             else:
                 F.set_result(value)

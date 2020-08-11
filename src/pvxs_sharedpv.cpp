@@ -26,6 +26,7 @@ void attachHandler(server::SharedPV& pv, PyObject *handler)
 
             auto ret(PyRef::allownull(PyObject_CallMethod(handler, "onFirstConnect", "")));
             if(PyErr_Occurred()) {
+                PySys_WriteStderr("Unhandled Exception %s:%d", __FILE__, __LINE__);
                 PyErr_Print();
                 PyErr_Clear();
                 // we don't treat this failure as critical.
@@ -38,6 +39,7 @@ void attachHandler(server::SharedPV& pv, PyObject *handler)
 
             auto ret(PyRef::allownull(PyObject_CallMethod(handler, "onLastDisconnect", "")));
             if(PyErr_Occurred()) {
+                PySys_WriteStderr("Unhandled Exception %s:%d", __FILE__, __LINE__);
                 PyErr_Print();
                 PyErr_Clear();
                 // we don't treat this failure as critical.
@@ -52,6 +54,7 @@ void attachHandler(server::SharedPV& pv, PyObject *handler)
 
             auto ret(PyRef::allownull(PyObject_CallMethod(handler, "put", "O", pyop.obj)));
             if(PyErr_Occurred()) {
+                PySys_WriteStderr("Unhandled Exception %s:%d", __FILE__, __LINE__);
                 PyErr_Print();
                 PyErr_Clear();
                 op->error("Internal Error on Remote end");
@@ -65,6 +68,7 @@ void attachHandler(server::SharedPV& pv, PyObject *handler)
 
             auto ret(PyRef::allownull(PyObject_CallMethod(handler, "rpc", "O", pyop.obj)));
             if(PyErr_Occurred()) {
+                PySys_WriteStderr("Unhandled Exception %s:%d", __FILE__, __LINE__);
                 PyErr_Print();
                 PyErr_Clear();
                 op->error("Internal Error on Remote end");

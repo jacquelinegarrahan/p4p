@@ -6,7 +6,7 @@ from libc.stdint cimport uint64_t, int64_t
 from libc.string cimport strcpy
 from libcpp cimport bool
 from libcpp.string cimport string
-from libcpp.map cimport map
+from libcpp.map cimport map as cmap
 from libcpp.vector cimport vector
 from libcpp.memory cimport shared_ptr
 from cpython cimport PyObject
@@ -443,7 +443,7 @@ cdef class ClientOperation:
         self._close()
 
     def _close(self):
-        cdef bool cancelled = True
+        cdef bool cancelled = False
         with nogil:
             if self.op.get():
                 cancelled = self.op.get().cancel()
@@ -746,19 +746,27 @@ cdef class StaticProvider:
             self.src = sharedpv.StaticSource()
 
     def close(self):
-        self.src.close()
+        with nogil:
+            self.src.close()
 
     def add(self, str name, SharedPV pv):
-        self.src.add(name.encode(), pv.pv)
+        cdef string cname = name.encode()
+        with nogil:
+            self.src.add(cname, pv.pv)
         self.shadow[name] = pv
 
     def remove(self, name):
+        cdef string cname = name.encode()
         self.shadow.pop(name, None)
-        self.src.remove(name.encode())
+        with nogil:
+            self.src.remove(cname)
 
     def keys(self):
+        cdef cmap[string, server.SharedPV] pvs
+        with nogil:
+            pvs = self.src.list()
         ret = []
-        for pair in self.src.list():
+        for pair in pvs:
             ret.append(pair.first.decode())
         return ret
 

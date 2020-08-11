@@ -31,6 +31,7 @@ public:
 
             auto ret(PyRef::allownull(PyObject_CallMethod(handler, "testChannel", "s", chan.name())));
             if(!ret.obj) {
+                PySys_WriteStderr("Unhandled Exception %s:%d", __FILE__, __LINE__);
                 PyErr_Print();
                 PyErr_Clear();
 
@@ -53,6 +54,7 @@ public:
                                                       op->name().c_str(),
                                                       op->peerName().c_str())));
         if(!ret.obj) {
+            PySys_WriteStderr("Unhandled Exception %s:%d", __FILE__, __LINE__);
             PyErr_Print();
             PyErr_Clear();
 
