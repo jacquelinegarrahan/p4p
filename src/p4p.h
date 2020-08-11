@@ -136,8 +136,7 @@ struct PyRef {
         (*this) = PyRef(o);
     }
 
-    constexpr explicit operator bool() const { return obj; }
-    constexpr explicit operator PyObject*() const { return obj; }
+    explicit operator bool() const { return obj; }
 };
 
 // release GIL
