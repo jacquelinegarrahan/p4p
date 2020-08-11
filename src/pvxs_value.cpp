@@ -1,12 +1,12 @@
 
 #include <sstream>
 
+#include <p4p.h>
+#include <_p4p.h>
+
 #define NO_IMPORT_ARRAY
 //#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/ndarrayobject.h>
-
-#include <p4p.h>
-#include <_p4p.h>
 
 namespace p4p {
 
@@ -44,6 +44,11 @@ PyObject* asPy(const Value& v, bool unpackstruct, bool unpackrecurse, PyObject* 
     case StoreType::Real:
         return PyFloat_FromDouble(v.as<double>());
     case StoreType::Integer:
+#if PY_MAJOR_VERSION < 3
+        if(v.type()!=TypeCode::Int64) {
+            return PyInt_FromLong(v.as<int32_t>());
+        }
+#endif
         return PyLong_FromLongLong(v.as<int64_t>());
     case StoreType::UInteger:
         return PyLong_FromUnsignedLongLong(v.as<uint64_t>());

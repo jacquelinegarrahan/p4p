@@ -334,7 +334,7 @@ class TestHighLevel(RefTestCase):
         self.assertFalse(val.raw.changed('value'))
 
     def test_get_bad_mask(self):
-        with self.assertRaisesRegex(RemoteError, "No field 'nonexistant' Empty field selection"):
+        with self.assertRaisesRegexp(RemoteError, "No field 'nonexistant' Empty field selection"):
             val = self._ds_client.get('pv:name', timeout=self.timeout, request='nonexistant')
 
     def test_put(self):
@@ -344,7 +344,7 @@ class TestHighLevel(RefTestCase):
         self.assertEqual(val, 41)
 
     def test_put_bad_mask(self):
-        with self.assertRaisesRegex(RemoteError, "No field 'nonexistant' Empty field selection"):
+        with self.assertRaisesRegexp(RemoteError, "No field 'nonexistant' Empty field selection"):
             self._ds_client.put('pv:name', 41, request='nonexistant', timeout=self.timeout)
 
     def test_mon(self):

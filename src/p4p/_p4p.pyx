@@ -99,23 +99,27 @@ cdef public:
         wrap.arr = arr
         return wrap
 
-cdef lookupMember(data.Value* dest, const data.Value& top, str key, int err):
+cdef lookupMember(data.Value* dest, const data.Value& top, key, int err):
         cdef string ckey
         cdef data.Value mem
 
         if key is None:
             dest[0] = top
-        else:
+            return
+        elif isinstance(key, unicode):
             ckey = key.encode()
-            try:
-                dest[0] = top.lookup(ckey)
-            except KeyError as e:
-                if err==0:
-                    return
-                elif err==1:
-                    raise
-                else:
-                    raise AttributeError(key)
+        else:
+            ckey = key
+
+        try:
+            dest[0] = top.lookup(ckey)
+        except KeyError as e:
+            if err==0:
+                return
+            elif err==1:
+                raise
+            else:
+                raise AttributeError(key)
 
 cdef class _Value:
     cdef data.Value val
@@ -140,7 +144,7 @@ cdef class _Value:
         else:
             raise ValueError("type= or clone= required")
 
-    def get(self, str key, default=None):
+    def get(self, key, default=None):
         cdef data.Value mem
         lookupMember(&mem, self.val, key, 0)
         if not mem.valid():
@@ -148,37 +152,37 @@ cdef class _Value:
 
         return asPy(mem, False, False, None)
 
-    def items(self, str key=None):
+    def items(self, key=None):
         cdef data.Value mem
         lookupMember(&mem, self.val, key, 1)
 
         return asPy(mem, True, False, None)
 
-    def __setitem__(self, str key, value):
+    def __setitem__(self, key, value):
         cdef data.Value mem
         lookupMember(&mem, self.val, key, 1)
 
         storePy(mem, value)
 
-    def __getitem__(self, str key):
+    def __getitem__(self, key):
         cdef data.Value mem
         lookupMember(&mem, self.val, key, 1)
 
         return asPy(mem, False, False, None)
 
-    def __setitem__(self, str key, value):
+    def __setitem__(self, key, value):
         cdef data.Value mem
         lookupMember(&mem, self.val, key, 1)
 
         storePy(mem, value)
 
-    def __getattr__(self, str key):
+    def __getattr__(self, key):
         cdef data.Value mem
         lookupMember(&mem, self.val, key, 2)
 
         return asPy(mem, False, False, None)
 
-    def __setattr__(self, str key, value):
+    def __setattr__(self, key, value):
         cdef data.Value mem
         lookupMember(&mem, self.val, key, 2)
 
@@ -188,13 +192,13 @@ cdef class _Value:
         cdef string cname = name.encode()
         return self.val[cname].valid()
 
-    def tolist(self, str name=None):
+    def tolist(self, name=None):
         cdef data.Value mem
         lookupMember(&mem, self.val, name, 2)
 
         return asPy(mem, True, True, None)
 
-    def todict(self, str name=None, wrapper=dict):
+    def todict(self, name=None, wrapper=dict):
         cdef data.Value mem
         lookupMember(&mem, self.val, name, 2)
 
@@ -209,7 +213,7 @@ cdef class _Value:
             ret.append(self.val.nameOf(child))
         return iter(ret)
 
-    def type(self, str fld=None):
+    def type(self, fld=None):
         cdef data.Value mem
         cdef _Type type
         lookupMember(&mem, self.val, fld, 1)
@@ -231,7 +235,7 @@ cdef class _Value:
         else:
             u._from(NULL);
 
-    def changed(self, str field=None):
+    def changed(self, field=None):
         cdef data.Value mem
         lookupMember(&mem, self.val, field, 1)
 
