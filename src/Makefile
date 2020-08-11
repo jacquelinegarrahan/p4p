@@ -67,6 +67,7 @@ PY += p4p/test/test_rpc.py
 PY += p4p/test/test_nt.py
 PY += p4p/test/test_sharedpv.py
 PY += p4p/test/test_cothread.py
+PY += p4p/test/test_qt.py
 PY += p4p/test/test_gw.py
 PY += p4p/test/test_asLib.py
 
