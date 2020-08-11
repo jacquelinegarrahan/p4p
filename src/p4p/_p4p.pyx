@@ -1,5 +1,5 @@
 # distutils: language = c++
-#cython: language_level=3
+#cython: language_level=2
 
 cimport cython
 from libc.stdint cimport uint64_t, int64_t
@@ -417,7 +417,7 @@ cdef class ClientOperation:
             if pvRequest is not None:
                 bget.rawRequest(pvRequest.val)
             with nogil:
-                self.op = bget.exec()
+                self.op = bget.exec_()
 
         elif doPut and not doRPC:
             bput = ctxt.ctxt.put(pvname).fetchPresent(doGet)
@@ -426,7 +426,7 @@ cdef class ClientOperation:
             if pvRequest is not None:
                 bput.rawRequest(pvRequest.val)
             with nogil:
-                self.op = bput.exec()
+                self.op = bput.exec_()
 
         elif not doGet and not doPut and doRPC:
             brpc = ctxt.ctxt.rpc(pvname, value.val)
@@ -434,7 +434,7 @@ cdef class ClientOperation:
             if pvRequest is not None:
                 brpc.rawRequest(pvRequest.val)
             with nogil:
-                self.op = brpc.exec()
+                self.op = brpc.exec_()
 
         else:
             raise ValueError("Operation unsupported combination of get=, put=, and rpc=")
@@ -471,7 +471,7 @@ cdef class ClientMonitor:
         opEvent(builder, handler)
         if pvRequest is not None:
             builder.rawRequest(pvRequest.val)
-        self.sub = builder.exec()
+        self.sub = builder.exec_()
 
     def __dealloc__(self):
         self._close()

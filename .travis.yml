@@ -18,6 +18,14 @@ matrix:
       script: ./.ci/travis-linux-build.sh
 
     - sudo: false
+      dist: bionic
+      language: python
+      python: "3.7"
+      env: BRBASE=7.0 BRPVXS=devel PROF=deb10
+      install: ./.ci/travis-linux-prepare.sh
+      script: ./.ci/travis-linux-build.sh
+
+    - sudo: false
       dist: trusty
       language: python
       python: "2.7"

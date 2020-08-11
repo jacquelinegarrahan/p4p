@@ -4,7 +4,7 @@ from libcpp.string cimport string
 from libcpp.map cimport map
 from libcpp.vector cimport vector
 from libcpp.memory cimport shared_ptr
-from libcpp.functional cimport function
+#from libcpp.functional cimport function
 
 from .data cimport Value
 
@@ -59,7 +59,7 @@ cdef extern from "<pvxs/client.h>" namespace "pvxs::client" nogil:
 
         #GetBuilder& result(function[void(Result&&)]&& cb) except+
 
-        shared_ptr[Operation] exec() except+
+        shared_ptr[Operation] exec_ "exec"() except+
 
     cdef cppclass PutBuilder:
         PutBuilder& field(const string& fld) except+
@@ -71,7 +71,7 @@ cdef extern from "<pvxs/client.h>" namespace "pvxs::client" nogil:
         #PutBuilder& build(std::function[Value(Value&&)]&& cb)
         #PutBuilder& result(function[void(Result&&)]&& cb) except+
 
-        shared_ptr[Operation] exec() except+
+        shared_ptr[Operation] exec_ "exec"() except+
 
     cdef cppclass RPCBuilder:
         RPCBuilder& field(const string& fld) except+
@@ -79,9 +79,9 @@ cdef extern from "<pvxs/client.h>" namespace "pvxs::client" nogil:
         RPCBuilder& pvRequest(const string& fld) except+
         RPCBuilder& rawRequest(const Value& fld) except+
 
-        RPCBuilder& result(function[void(Result&&)]&& cb) except+
+        #RPCBuilder& result(function[void(Result&&)]&& cb) except+
 
-        shared_ptr[Operation] exec() except+
+        shared_ptr[Operation] exec_ "exec"() except+
 
     cdef cppclass MonitorBuilder:
         MonitorBuilder& field(const string& fld) except+
@@ -93,7 +93,7 @@ cdef extern from "<pvxs/client.h>" namespace "pvxs::client" nogil:
         MonitorBuilder& maskConnected(bool m)
         MonitorBuilder& maskDisconnected(bool m)
 
-        shared_ptr[Subscription] exec() except+
+        shared_ptr[Subscription] exec_ "exec"() except+
 
     cdef cppclass RequestBuilder:
         RequestBuilder& field(const string& fld) except+
