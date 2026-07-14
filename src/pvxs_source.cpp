@@ -136,9 +136,8 @@ void disconnectDynamic(const std::shared_ptr<server::Source>& src)
     if(!src)
         return;
 
-    auto dynsrc = dynamic_cast<DynamicSource*>(src.get());
-
-    dynsrc->handler = nullptr;
+    if(auto dynsrc = dynamic_cast<DynamicSource*>(src.get()))
+        dynsrc->handler = nullptr;
 }
 
 }
